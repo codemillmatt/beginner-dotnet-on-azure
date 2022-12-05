@@ -8,12 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 
 var sqlConnection = builder.Configuration["ConnectionStrings:SqlDb:DotAzure"];
 
-builder.Services.AddSqlServer<ProductContext>(sqlConnection, options => options.EnableRetryOnFailure());
+builder.Services.AddSqlServer<PickleDbContext>(sqlConnection, options => options.EnableRetryOnFailure());
+
 builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<ReviewService>();
 
 var app = builder.Build();
 

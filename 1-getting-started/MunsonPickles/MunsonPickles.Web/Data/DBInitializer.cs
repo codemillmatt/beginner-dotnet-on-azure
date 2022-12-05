@@ -1,12 +1,13 @@
-﻿using MunsonPickles.Web.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using MunsonPickles.Web.Models;
 
 namespace MunsonPickles.Web.Data;
 
 public static class DBInitializer
 {
-    public static void InitializeProducts(ProductContext context)
+    public static void InitializeDatabase(PickleDbContext pickleContext)
     {
-        if (context.Products.Any())
+        if (pickleContext.Products.Any())
             return;
 
         var pickleType = new ProductType { Name = "Pickle" };
@@ -23,7 +24,7 @@ public static class DBInitializer
         {
             Description = "unBeetable",
             Name = "Red Pickled Beets",
-            ProductType = pickleType
+            ProductType = pickleType,            
         };
 
         var strawberryPreserves = new Product
@@ -33,12 +34,41 @@ public static class DBInitializer
             ProductType = preserveType
         };
 
-        context.Add(pickleType);
-        context.Add(preserveType);
-        context.Add(strawberryPreserves);
-        context.Add(dillPickles);
-        context.Add(pickledBeet);
+        pickleContext.Add(pickleType);
+        pickleContext.Add(preserveType);
 
-        context.SaveChanges();
+        pickleContext.Add(strawberryPreserves);
+        pickleContext.Add(dillPickles);
+        pickleContext.Add(pickledBeet);
+
+        var dillReview = new Review
+        {
+            Date = DateTime.Now,
+            Product = dillPickles,
+            Text = "These pickles pack a punch",
+            UserId = 1
+        };
+
+        var beetReview = new Review
+        {
+            Date = DateTime.Now,
+            Product = pickledBeet,
+            Text = "Bonafide best beets",
+            UserId = 1
+        };
+
+        var preserveReview = new Review
+        {
+            Date = DateTime.Now,
+            Product = strawberryPreserves,
+            Text = "Succulent strawberries making biscuits better",
+            UserId = 1
+        };
+
+        pickleContext.Add(dillReview);
+        pickleContext.Add(preserveReview);
+        pickleContext.Add(beetReview);
+
+        pickleContext.SaveChanges(); 
     }
 }

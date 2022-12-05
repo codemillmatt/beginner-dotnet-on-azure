@@ -1,0 +1,34 @@
+﻿@using MunsonPickles.Web.Services
+@using MunsonPickles.Web.Models
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@inject ProductService productService
+
+@if (Products == null)
+{
+    <p>We're picking the pickles!</p>
+}
+else
+{
+    <div class="pt-3">
+        <QuickGrid Items="@Products">
+            <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.ProductType.Name)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Description)" />
+            <TemplateColumn>
+                <div class="btn btn-primary">Review</div>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+    
+}
+
+@code {
+    private IQueryable<Product>? Products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Products = (await productService.GetAllProducts()).AsQueryable();
+
+    }
+}

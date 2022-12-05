@@ -6,9 +6,9 @@ namespace MunsonPickles.Web.Services;
 
 public class ProductService
 {
-    private readonly ProductContext productContext;
+    private readonly PickleDbContext productContext;
 
-    public ProductService(ProductContext context)
+    public ProductService(PickleDbContext context)
     {
         productContext = context;
     }
@@ -19,6 +19,6 @@ public class ProductService
             .Products
             .Include(p => p.ProductType)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync();          
     }
 }
