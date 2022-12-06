@@ -13,62 +13,55 @@ public static class DBInitializer
         var pickleType = new ProductType { Name = "Pickle" };
         var preserveType = new ProductType { Name = "Preserves" };
 
+        var dillReview = new Review
+        {
+            Date = DateTime.Now,
+            Text = "These pickles pack a punch",
+            UserId = "matt"
+        };
+
         var dillPickles = new Product
         {
             Description = "Deliciously dill",
             Name = "Dill Pickles",
-            ProductType = pickleType
+            ProductType = pickleType,
+            Reviews = new List<Review> { dillReview }
+        };
+
+        var beetReview = new Review
+        {
+            Date = DateTime.Now,
+            Text = "Bonafide best beets",
+            UserId = "matt"
         };
 
         var pickledBeet = new Product
         {
             Description = "unBeetable",
             Name = "Red Pickled Beets",
-            ProductType = pickleType,            
+            ProductType = pickleType,
+            Reviews = new List<Review> { beetReview }
+        };
+
+        var preserveReview = new Review
+        {
+            Date = DateTime.Now,
+            Text = "Succulent strawberries making biscuits better",
+            UserId = "matt"
         };
 
         var strawberryPreserves = new Product
         {
             Description = "Sweet and a treat to make your toast the most",
             Name = "Strawberry Preserves",
-            ProductType = preserveType
+            ProductType = preserveType,
+            Reviews = new List<Review> { preserveReview }
         };
 
-        pickleContext.Add(pickleType);
-        pickleContext.Add(preserveType);
+        pickleContext.Products.Add(dillPickles);
+        pickleContext.Products.Add(pickledBeet);
+        pickleContext.Products.Add(strawberryPreserves);
 
-        pickleContext.Add(strawberryPreserves);
-        pickleContext.Add(dillPickles);
-        pickleContext.Add(pickledBeet);
-
-        var dillReview = new Review
-        {
-            Date = DateTime.Now,
-            Product = dillPickles,
-            Text = "These pickles pack a punch",
-            UserId = 1
-        };
-
-        var beetReview = new Review
-        {
-            Date = DateTime.Now,
-            Product = pickledBeet,
-            Text = "Bonafide best beets",
-            UserId = 1
-        };
-
-        var preserveReview = new Review
-        {
-            Date = DateTime.Now,
-            Product = strawberryPreserves,
-            Text = "Succulent strawberries making biscuits better",
-            UserId = 1
-        };
-
-        pickleContext.Add(dillReview);
-        pickleContext.Add(preserveReview);
-        pickleContext.Add(beetReview);
-
-        pickleContext.SaveChanges(); 
+        pickleContext.SaveChanges();
     }
 }

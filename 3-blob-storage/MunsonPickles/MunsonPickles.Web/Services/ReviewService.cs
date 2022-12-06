@@ -57,9 +57,6 @@ public class ReviewService
 		{
 			System.Diagnostics.Debug.WriteLine(ex);
 		}
-
-        //return review;
-        await Task.CompletedTask;
     }
 
 	public async Task<IEnumerable<Review>> GetReviewsForProduct(int productId)
