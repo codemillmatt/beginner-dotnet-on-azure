@@ -1,5 +1,6 @@
 ﻿@using Azure.Storage.Blobs
 @using Azure.Storage.Blobs.Models
+@using System.Diagnostics.CodeAnalysis;
 
 @inject IJSRuntime JS
 @inject ReviewService reviewService
@@ -19,7 +20,10 @@
                 <textarea class="form-control" rows="10" 
                     placeholder="Leave us a review, we'll ❤️ it and we'll ❤️ you!"
                     @bind="reviewText"/>
-                <InputFile id="hi" OnChange="@LoadFiles" />
+                @if (showUpload)
+                {
+                    <InputFile id="hi" OnChange="@LoadFiles" />
+                }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
@@ -31,19 +35,20 @@
 
 
 @code {
-    [Parameter]
-    public Product? Product { get; set; } = null;
+    [Parameter]    
+    public Product Product { get; set; }
 
     string reviewText = string.Empty;
     string newBlobName = string.Empty;
-    string loggedInUser = "matt"; 
+    string loggedInUser = "matt"; // the name matt will eventually be replaced by the logged in user
     bool loadedPhoto = false;
+
+    bool showUpload = true;
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
         // immediately save to blob storage
 
-        // the name matt will eventually be replaced by the logged in user
         var containerClient = blobService.GetBlobContainerClient(loggedInUser);
 
         await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
@@ -61,35 +66,25 @@
     async Task SaveReview()
     {
         var cdn = configuration["Cdn:Endpoint"];
-        IEnumerable<ReviewPhoto>? photos = null;
+        List<string>? photoUrls = new();
 
         if (loadedPhoto)
         {
-            ReviewPhoto photo = new ReviewPhoto
-            {
-                PhotoUrl = $"{cdn}/{loggedInUser}/{newBlobName}"
-            };
-
-            photos = new[] { photo };
+            photoUrls.Add($"{cdn}/{loggedInUser}/{newBlobName}");            
         }
 
-        Review newReview = new()
-        {
-            Date = DateTime.Now,
-            Product = Product,
-            Text = reviewText,
-            Photos = photos,
-            UserId = "matt"
-        };
-
-        await reviewService.AddReview(newReview);
+        await reviewService.AddReview(reviewText, photoUrls, Product.Id);
 
         // we'll just assume everything worked out great and close the modal
 
-        Product = null;
         reviewText = string.Empty;
         newBlobName = string.Empty;
         loadedPhoto = false;
+        showUpload = false;
+
+        // hacky work around to get the upload to clear file name
+        StateHasChanged();
+        showUpload = true;
         StateHasChanged();
 
         await JS.InvokeVoidAsync("hideModal", "reviewModal");

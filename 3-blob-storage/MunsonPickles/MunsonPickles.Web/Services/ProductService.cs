@@ -22,7 +22,7 @@ public class ProductService
             .ToListAsync();          
     }
 
-    public async Task<Product> GetProductById(int productId)
+    public async Task<Product>? GetProductById(int productId)
     {
         return await productContext
             .Products

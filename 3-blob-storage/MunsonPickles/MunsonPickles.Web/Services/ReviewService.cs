@@ -18,11 +18,38 @@ public class ReviewService
 		blobServiceClient = blob;
 	}
 
-	public async Task<Review> AddReview(Review review)
+	public async Task AddReview(string reviewText, List<string> photoUrls, int productId)
 	{
+		string userId = "matt"; // this will get changed out when we add auth
+
 		try
 		{
-			pickleContext.Update(review);
+            // create all the photo url object
+            List<ReviewPhoto> photos = new List<ReviewPhoto>();
+			
+			foreach (var photoUrl in photoUrls)
+			{
+				photos.Add(new ReviewPhoto {  PhotoUrl = photoUrl });
+			}
+
+			// create the new review
+			Review review = new()
+			{
+				Date = DateTime.Now,
+				Photos = photos,
+				Text = reviewText,
+				UserId = userId
+			};
+
+			Product product = await pickleContext.Products.FindAsync(productId);
+
+			if (product is null)
+				return;
+
+			if (product.Reviews is null)
+				product.Reviews = new List<Review>();
+
+			product.Reviews.Add(review);
 
 			await pickleContext.SaveChangesAsync();
 		}
@@ -31,8 +58,9 @@ public class ReviewService
 			System.Diagnostics.Debug.WriteLine(ex);
 		}
 
-		return review;
-	}
+        //return review;
+        await Task.CompletedTask;
+    }
 
 	public async Task<IEnumerable<Review>> GetReviewsForProduct(int productId)
 	{
