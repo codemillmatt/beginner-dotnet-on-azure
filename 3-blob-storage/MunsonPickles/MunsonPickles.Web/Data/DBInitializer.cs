@@ -46,7 +46,7 @@ public static class DBInitializer
             Date = DateTime.Now,
             Product = dillPickles,
             Text = "These pickles pack a punch",
-            UserId = 1
+            UserId = "matt"
         };
 
         var beetReview = new Review
@@ -54,7 +54,7 @@ public static class DBInitializer
             Date = DateTime.Now,
             Product = pickledBeet,
             Text = "Bonafide best beets",
-            UserId = 1
+            UserId = "matt"
         };
 
         var preserveReview = new Review
@@ -62,7 +62,7 @@ public static class DBInitializer
             Date = DateTime.Now,
             Product = strawberryPreserves,
             Text = "Succulent strawberries making biscuits better",
-            UserId = 1
+            UserId = "matt"
         };
 
         pickleContext.Add(dillReview);

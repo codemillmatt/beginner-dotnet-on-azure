@@ -7,7 +7,12 @@ public class PickleDbContext : DbContext
 {
 	public PickleDbContext(DbContextOptions<PickleDbContext> options) : base(options) { }
 
-	public DbSet<Product> Products => Set<Product>();
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
+    }
+
+    public DbSet<Product> Products => Set<Product>();
 	public DbSet<ProductType> ProductTypes => Set<ProductType>();
 	public DbSet<Review> Reviews => Set<Review>();
 	public DbSet<ReviewPhoto> ReviewsPhoto => Set<ReviewPhoto>();

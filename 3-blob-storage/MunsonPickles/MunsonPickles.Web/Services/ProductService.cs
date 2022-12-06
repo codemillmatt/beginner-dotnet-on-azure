@@ -24,6 +24,9 @@ public class ProductService
 
     public async Task<Product> GetProductById(int productId)
     {
-        return await productContext.Products.Where(p => p.Id == productId).AsNoTracking().FirstOrDefaultAsync();
+        return await productContext
+            .Products
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == productId);
     }
 }

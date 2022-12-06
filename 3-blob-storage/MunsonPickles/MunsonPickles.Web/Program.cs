@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Azure;
 using MunsonPickles.Web.Data;
 using MunsonPickles.Web.Services;
+using Azure.Storage.Blobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +12,15 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 var sqlConnection = builder.Configuration["ConnectionStrings:SqlDb:DotAzure"];
+var storageConnection = builder.Configuration["ConnectionStrings:Storage:DotAzure"];
 
 builder.Services.AddSqlServer<PickleDbContext>(sqlConnection, options => options.EnableRetryOnFailure());
+
+builder.Services.AddAzureClients(azureBuilder =>
+{
+    azureBuilder.AddBlobServiceClient(storageConnection);
+});
+
 
 builder.Services.AddTransient<ProductService>();
 builder.Services.AddTransient<ReviewService>();

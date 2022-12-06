@@ -1,18 +1,21 @@
 ﻿using MunsonPickles.Web.Data;
 using MunsonPickles.Web.Models;
 
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
+using Azure.Storage.Blobs;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MunsonPickles.Web.Services;
 
 public class ReviewService
 {
 	private readonly PickleDbContext pickleContext;
+	private readonly BlobServiceClient blobServiceClient;
 
-	public ReviewService(PickleDbContext context)
+	public ReviewService(PickleDbContext context, BlobServiceClient blob)
 	{
 		pickleContext = context;
+		blobServiceClient = blob;
 	}
 
 	public async Task<Review> AddReview(Review review)
