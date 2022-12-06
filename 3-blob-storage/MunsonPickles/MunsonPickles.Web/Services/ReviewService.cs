@@ -41,7 +41,10 @@ public class ReviewService
 				UserId = userId
 			};
 
-			Product product = await pickleContext.Products.FindAsync(productId);
+			Product product = await pickleContext
+				.Products
+				.Include(p => p.Reviews)
+				.FirstAsync(p => p.Id == productId);
 
 			if (product is null)
 				return;
@@ -63,4 +66,15 @@ public class ReviewService
 	{
 		return await pickleContext.Reviews.AsNoTracking().Where(r => r.Product.Id == productId).ToListAsync();
 	}
+
+	public async Task<Review>? GetReviewById(int reviewId)
+	{
+		return await pickleContext
+			.Reviews
+			.Include(r => r.Product)
+			.Include(r => r.Photos)
+			.AsNoTracking()
+			.FirstOrDefaultAsync(r => r.Id == reviewId);
+	}
+
 }

@@ -24,6 +24,10 @@
                 {
                     <InputFile id="hi" OnChange="@LoadFiles" />
                 }
+                @if (uploadSuccessful)
+                {
+                    <p class="bg-success">Uploaded</p>
+                }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
@@ -44,9 +48,12 @@
     bool loadedPhoto = false;
 
     bool showUpload = true;
+    bool uploadSuccessful = false;
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
+        uploadSuccessful = false;
+
         // immediately save to blob storage
 
         var containerClient = blobService.GetBlobContainerClient(loggedInUser);
@@ -61,6 +68,10 @@
         );
 
         loadedPhoto = true;
+
+        // this is a way for me to know the upload worked
+        uploadSuccessful = true;
+        StateHasChanged();        
     }
 
     async Task SaveReview()
@@ -81,6 +92,7 @@
         newBlobName = string.Empty;
         loadedPhoto = false;
         showUpload = false;
+        uploadSuccessful = false;
 
         // hacky work around to get the upload to clear file name
         StateHasChanged();
