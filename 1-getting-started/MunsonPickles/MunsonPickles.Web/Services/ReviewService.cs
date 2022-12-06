@@ -1,6 +1,9 @@
 ﻿using MunsonPickles.Web.Data;
 using MunsonPickles.Web.Models;
 
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore;
+
 namespace MunsonPickles.Web.Services;
 
 public class ReviewService
@@ -14,10 +17,22 @@ public class ReviewService
 
 	public async Task<Review> AddReview(Review review)
 	{
-		pickleContext.Add(review);
+		try
+		{
+			pickleContext.Update(review);
 
-		await pickleContext.SaveChangesAsync();
+			await pickleContext.SaveChangesAsync();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
+		}
 
 		return review;
+	}
+
+	public async Task<IEnumerable<Review>> GetReviewsForProduct(int productId)
+	{
+		return await pickleContext.Reviews.AsNoTracking().Where(r => r.Product.Id == productId).ToListAsync();
 	}
 }

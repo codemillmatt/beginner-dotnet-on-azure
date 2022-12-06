@@ -1,0 +1,39 @@
+﻿@inject ReviewService reviewService
+
+<h1 class="display-6">Reviews</h1>
+
+@if (Product is null || Reviews is null)
+{
+    <p>We're still waiting for some reviews...</p>
+}
+else
+{
+    <div class="pt-3">
+        <QuickGrid Items="@Reviews">
+            <PropertyColumn Title="" Property="@(r => r.Text)" Sortable="false" />
+        </QuickGrid>
+    </div>
+    <div>
+        <button class="btn btn-link" @onclick="@GetReviews">(refesh the reviews)</button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Product? Product { get; set; }
+
+    public IQueryable<Review>? Reviews;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Product is null)
+            return;
+
+        await GetReviews();
+    }
+
+    async Task GetReviews()
+    {
+        Reviews = (await reviewService.GetReviewsForProduct(Product.Id)).AsQueryable();
+    }
+}

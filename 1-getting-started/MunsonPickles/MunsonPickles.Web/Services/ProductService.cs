@@ -21,4 +21,9 @@ public class ProductService
             .AsNoTracking()
             .ToListAsync();          
     }
+
+    public async Task<Product> GetProductById(int productId)
+    {
+        return await productContext.Products.Where(p => p.Id == productId).AsNoTracking().FirstOrDefaultAsync();
+    }
 }
