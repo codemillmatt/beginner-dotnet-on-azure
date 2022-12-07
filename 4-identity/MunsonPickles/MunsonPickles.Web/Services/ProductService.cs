@@ -1,32 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MunsonPickles.Web.Data;
-using MunsonPickles.Shared.Models;
+﻿using MunsonPickles.Shared.Models;
 
 namespace MunsonPickles.Web.Services;
 
 public class ProductService
 {
-    private readonly PickleDbContext productContext;
+    private readonly HttpClient productHttp;
 
-    public ProductService(PickleDbContext context)
+    public ProductService(HttpClient httpClient)
     {
-        productContext = context;
+        productHttp = httpClient;
     }
 
     public async Task<IEnumerable<Product>> GetAllProducts()
     {
-        return await productContext
-            .Products
-            .Include(p => p.ProductType)
-            .AsNoTracking()
-            .ToListAsync();          
+        return await productHttp.GetFromJsonAsync<IEnumerable<Product>>("/products");
     }
 
     public async Task<Product>? GetProductById(int productId)
     {
-        return await productContext
-            .Products
-            .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == productId);
+        return await productHttp.GetFromJsonAsync<Product>($"/products/{productId}");
     }
 }

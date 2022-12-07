@@ -1,6 +1,6 @@
 ﻿using MunsonPickles.Shared.Models;
 
-namespace MunsonPickles.Web.Data;
+namespace MunsonPickles.Api.Data;
 
 public static class DBInitializer
 {

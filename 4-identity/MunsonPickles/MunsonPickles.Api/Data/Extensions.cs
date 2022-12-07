@@ -1,4 +1,4 @@
-﻿namespace MunsonPickles.Web.Data;
+﻿namespace MunsonPickles.Api.Data;
 
 public static class Extensions
 {
