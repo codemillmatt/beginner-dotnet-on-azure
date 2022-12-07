@@ -1,5 +1,5 @@
 ﻿using MunsonPickles.Web.Data;
-using MunsonPickles.Web.Models;
+using MunsonPickles.Shared.Models;
 
 using Microsoft.EntityFrameworkCore;
 using Azure.Storage.Blobs;

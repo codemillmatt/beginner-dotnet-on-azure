@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MunsonPickles.Shared\MunsonPickles.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

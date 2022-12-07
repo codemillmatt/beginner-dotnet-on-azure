@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MunsonPickles.Web.Data;
-using MunsonPickles.Web.Models;
+using MunsonPickles.Shared.Models;
 
 namespace MunsonPickles.Web.Services;
 
