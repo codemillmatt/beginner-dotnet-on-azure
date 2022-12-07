@@ -5,9 +5,9 @@ VisualStudioVersion = 17.5.33103.201
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MunsonPickles.Web", "MunsonPickles.Web\MunsonPickles.Web.csproj", "{A12EB21A-BF3C-49F0-9263-9F9C4607A539}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MunsonPickles.Api", "MunsonPickles.Api\MunsonPickles.Api.csproj", "{DB4C4985-6829-4714-9C98-B5AC8624428D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MunsonPickles.Api", "MunsonPickles.Api\MunsonPickles.Api.csproj", "{DB4C4985-6829-4714-9C98-B5AC8624428D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MunsonPickles.Shared", "MunsonPickles.Shared\MunsonPickles.Shared.csproj", "{12667CDC-5B10-4342-8A1B-12412DB92B20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MunsonPickles.Shared", "MunsonPickles.Shared\MunsonPickles.Shared.csproj", "{12667CDC-5B10-4342-8A1B-12412DB92B20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
