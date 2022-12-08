@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Logging;
+
+using Azure.Identity;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,11 +35,17 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor()
     .AddMicrosoftIdentityConsentHandler();
 
-var storageConnection = builder.Configuration["ConnectionStrings:Storage:DotAzure"];
+//var storageConnection = builder.Configuration["ConnectionStrings:Storage:DotAzure"];
+
+var storageUri = builder.Configuration["Storage:Endpoint"];
 
 builder.Services.AddAzureClients(azureBuilder =>
 {
-    azureBuilder.AddBlobServiceClient(storageConnection);
+    azureBuilder.AddBlobServiceClient(new Uri(storageUri));
+
+    var credentials = new DefaultAzureCredential();
+
+    azureBuilder.UseCredential(credentials);
 });
 
 builder.Services.AddSingleton<ProductService>();
