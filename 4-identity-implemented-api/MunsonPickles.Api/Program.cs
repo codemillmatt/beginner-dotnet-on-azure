@@ -86,8 +86,6 @@ app.MapGet("/reviews/{reviewId}", async(ReviewService reviewService, int reviewI
 
 app.MapPost("/reviews", async (HttpContext httpContext, ReviewService reviewService, NewReview review) =>
 {
-    httpContext.VerifyUserHasAnyAcceptedScope();
-
     await reviewService.AddReview(
         review.ReviewText, review.PhotoUrls, review.ProductId
     );
@@ -98,9 +96,7 @@ app.MapPost("/reviews", async (HttpContext httpContext, ReviewService reviewServ
 .WithOpenApi()
 .Produces(StatusCodes.Status201Created)
 .Produces(StatusCodes.Status401Unauthorized)
-.RequireAuthorization()
-.RequireScope(initialScopes);
-
+.RequireAuthorization();
 
 app.CreateDbIfNotExists();
 

@@ -11,7 +11,7 @@ public class ReviewService
 	private readonly ITokenAcquisition tokenAcquisition;
 	private readonly IConfiguration configuration;
 
-	public ReviewService(HttpClient client, ITokenAcquisition token, IConfiguration configure)
+    public ReviewService(HttpClient client, ITokenAcquisition token, IConfiguration configure)
 	{
 		reviewClient = client;
 		tokenAcquisition = token;
@@ -30,7 +30,7 @@ public class ReviewService
 			};
 
             var scopes = configuration["ReviewApi:Scopes"]?.Split(' ')!;
-
+			
             string accessToken = await tokenAcquisition.GetAccessTokenForUserAsync(scopes);
 
 			reviewClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer");

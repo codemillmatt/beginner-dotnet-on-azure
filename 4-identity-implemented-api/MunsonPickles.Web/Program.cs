@@ -42,7 +42,7 @@ builder.Services.AddAzureClients(azureBuilder =>
 });
 
 builder.Services.AddSingleton<ProductService>();
-builder.Services.AddSingleton<ReviewService>();
+builder.Services.AddTransient<ReviewService>();
 
 builder.Services.AddHttpClient<ProductService>(client =>
 {
