@@ -38,6 +38,8 @@ builder.Services.AddAzureClients(azureBuilder =>
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddSingleton<ReviewService>();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddHttpClient<ProductService>(client =>
 {
     string productUrl = builder.Configuration["Api:ProductEndpoint"] ?? "http://localhost:3500";

@@ -1,5 +1,6 @@
 ﻿
 @inject ProductService productService
+@inject IHttpContextAccessor httpContextAccessor
 
 @if (Products == null)
 {
@@ -31,6 +32,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         Products = (await productService.GetAllProducts()).AsQueryable();
+
+        var user = httpContextAccessor?.HttpContext?.User!;
     }
 
     void LeaveReview(Product product)

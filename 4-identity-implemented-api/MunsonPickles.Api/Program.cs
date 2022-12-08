@@ -1,13 +1,25 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.Resource;
+
 using MunsonPickles.Api.Data;
 using MunsonPickles.Api.Services;
 using MunsonPickles.Shared.Models;
 using MunsonPickles.Shared.Transfer;
-using System.Net;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAdB2C"));
+
+var initialScopes = builder.Configuration["AzureAdB2C:Scopes"]?.Split(' ');
+
+builder.Services.AddAuthorization();
+
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -35,6 +47,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthorization();
+var scopedRequiredByApi = app.Configuration["AzureAdB2C:Scopes"] ?? "";
 
 app.MapGet("/products", async (ProductService productService) =>
 {
@@ -69,8 +84,10 @@ app.MapGet("/reviews/{reviewId}", async(ReviewService reviewService, int reviewI
 .Produces<Review>(StatusCodes.Status200OK);
 
 
-app.MapPost("/reviews", async (ReviewService reviewService, NewReview review) =>
+app.MapPost("/reviews", async (HttpContext httpContext, ReviewService reviewService, NewReview review) =>
 {
+    httpContext.VerifyUserHasAnyAcceptedScope();
+
     await reviewService.AddReview(
         review.ReviewText, review.PhotoUrls, review.ProductId
     );
@@ -79,7 +96,10 @@ app.MapPost("/reviews", async (ReviewService reviewService, NewReview review) =>
 })
 .WithName("AddReview")
 .WithOpenApi()
-.Produces(StatusCodes.Status201Created);
+.Produces(StatusCodes.Status201Created)
+.Produces(StatusCodes.Status401Unauthorized)
+.RequireAuthorization()
+.RequireScope(initialScopes);
 
 
 app.CreateDbIfNotExists();
