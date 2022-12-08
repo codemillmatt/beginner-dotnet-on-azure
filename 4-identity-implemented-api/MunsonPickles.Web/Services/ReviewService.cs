@@ -33,7 +33,7 @@ public class ReviewService
 			
             string accessToken = await tokenAcquisition.GetAccessTokenForUserAsync(scopes);
 
-			reviewClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer");
+			reviewClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
 			await reviewClient.PostAsJsonAsync<NewReview>("/reviews", newReview);
 		}
