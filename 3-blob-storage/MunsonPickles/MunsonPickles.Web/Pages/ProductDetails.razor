@@ -12,20 +12,20 @@ else
 
     <div class="container">
         <div class="row">
-            <div class="column">
+            <div class="col">
                 <p class="lead">@product?.Description</p>
             </div>
-            <div class="column">
+            <div class="col">
                 <img class="rounded-3" style="height:200px;" src="@product?.PhotoUrl"/>
             </div>
         </div>
         <div class="row mt-lg-4 bg-light">
-            <div class="column">
+            <div class="col">
                 <ProductReviews Product="@product"/>
             </div>
         </div>
         <div class="row mt-lg-4">
-            <div class="column">
+            <div class="col">
                 <button class="btn btn-primary" data-toggle="modal" data-target="#reviewModal">Add Review</button>
             </div>            
         </div>
