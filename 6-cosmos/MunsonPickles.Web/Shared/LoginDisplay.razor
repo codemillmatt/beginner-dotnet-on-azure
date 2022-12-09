@@ -1,0 +1,12 @@
+﻿@using Microsoft.Identity.Web
+@using Microsoft.Extensions.Options
+
+<AuthorizeView>
+    <Authorized>
+        Hello, @context.User.Identity?.Name!
+        <a href="MicrosoftIdentity/Account/SignedOut">Log out</a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="MicrosoftIdentity/Account/SignIn">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>

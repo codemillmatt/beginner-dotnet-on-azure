@@ -15,20 +15,36 @@ public class ReviewService
 		pickleContext = context;
 	}
 
-	public async Task<Review> AddReview(Review review)
+	public async Task AddReview(string reviewText, int productId)
 	{
-		try
-		{
-			pickleContext.Update(review);
+        string userId = "matt"; // this will get changed out when we add auth
 
-			await pickleContext.SaveChangesAsync();
-		}
+        try
+		{
+            // create the new review
+            Review review = new()
+            {
+                Date = DateTime.Now,                
+                Text = reviewText,
+                UserId = userId
+            };
+
+            Product product = await pickleContext.Products.FindAsync(productId);
+
+            if (product is null)
+                return;
+
+            if (product.Reviews is null)
+                product.Reviews = new List<Review>();
+
+            product.Reviews.Add(review);
+
+            await pickleContext.SaveChangesAsync();
+        }
 		catch (Exception ex)
 		{
 			System.Diagnostics.Debug.WriteLine(ex);
-		}
-
-		return review;
+		}		
 	}
 
 	public async Task<IEnumerable<Review>> GetReviewsForProduct(int productId)

@@ -33,17 +33,11 @@
 
     async Task SaveReview()
     {
-        Review newReview = new()
-        {
-            Date = DateTime.Now,
-            Product = Product,
-            Text = reviewText,
-            UserId = 1
-        };
-
-        await reviewService.AddReview(newReview);
+        await reviewService.AddReview(reviewText, Product.Id);
 
         // we'll just assume everything worked out great and close the modal
+
+        reviewText = string.Empty;
 
         await JS.InvokeVoidAsync("hideModal", "reviewModal");
     }

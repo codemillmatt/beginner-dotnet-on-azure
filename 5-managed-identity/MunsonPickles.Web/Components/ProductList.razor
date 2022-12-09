@@ -1,0 +1,40 @@
+﻿
+@inject ProductService productService
+
+@if (Products == null)
+{
+    <p>We're picking the pickles!</p>
+}
+else
+{
+    <div class="pt-3">
+        <QuickGrid Items="@Products">
+            <TemplateColumn Title="Product">
+                <a href="ProductDetails/@context.Id">@context.Name</a>
+            </TemplateColumn>
+            <PropertyColumn Title="Type" Property="@(p => p.ProductType.Name)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Description)" />
+            <TemplateColumn>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reviewModal" @onclick="@(() => LeaveReview(context))">Review</button>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+
+    <WriteReview Product="@SelectedProduct" />
+
+}
+
+@code {
+    private IQueryable<Product>? Products { get; set; }
+    private Product? SelectedProduct { get; set; } = null;    
+
+    protected override async Task OnInitializedAsync()
+    {
+        Products = (await productService.GetAllProducts()).AsQueryable();
+    }
+
+    void LeaveReview(Product product)
+    {        
+        SelectedProduct = product;     
+    }
+}
