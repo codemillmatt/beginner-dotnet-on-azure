@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MunsonPickles.Web", "MunsonPickles.Web\MunsonPickles.Web.csproj", "{E911A36B-D894-4209-BB7D-269C1C65D36B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MunsonPickles.Shared", "MunsonPickles.Shared\MunsonPickles.Shared.csproj", "{41A894F8-FB9D-4E41-BAEF-B01E8A43A8ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E911A36B-D894-4209-BB7D-269C1C65D36B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E911A36B-D894-4209-BB7D-269C1C65D36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E911A36B-D894-4209-BB7D-269C1C65D36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E911A36B-D894-4209-BB7D-269C1C65D36B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41A894F8-FB9D-4E41-BAEF-B01E8A43A8ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41A894F8-FB9D-4E41-BAEF-B01E8A43A8ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41A894F8-FB9D-4E41-BAEF-B01E8A43A8ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41A894F8-FB9D-4E41-BAEF-B01E8A43A8ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
