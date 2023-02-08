@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MunsonPickles.Functions", "MunsonPickles.Functions\MunsonPickles.Functions.csproj", "{5242C353-F199-4042-9025-0C4566C4BD6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MunsonPickles.Functions", "MunsonPickles.Functions\MunsonPickles.Functions.csproj", "{76D999D6-FFE8-4629-AB1B-A0E7F8FECB73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5242C353-F199-4042-9025-0C4566C4BD6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5242C353-F199-4042-9025-0C4566C4BD6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5242C353-F199-4042-9025-0C4566C4BD6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5242C353-F199-4042-9025-0C4566C4BD6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76D999D6-FFE8-4629-AB1B-A0E7F8FECB73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76D999D6-FFE8-4629-AB1B-A0E7F8FECB73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76D999D6-FFE8-4629-AB1B-A0E7F8FECB73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76D999D6-FFE8-4629-AB1B-A0E7F8FECB73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DAA5616E-41B8-4D06-BC52-F408DCF66430}
+		SolutionGuid = {1CF386A5-E130-4D08-AE4C-E06053AB81EA}
 	EndGlobalSection
 EndGlobal

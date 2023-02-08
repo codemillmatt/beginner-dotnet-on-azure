@@ -1,16 +1,13 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+
 using Microsoft.Extensions.Azure;
 using MunsonPickles.Web.Services;
-using Azure.Storage.Blobs;
-
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 
 using Azure.Identity;
-
+using Azure.Core.Extensions;
+using Azure.Storage.Queues;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +21,8 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddInMemoryTokenCaches();
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
+builder.Services.AddRazorPages().AddMicrosoftIdentityUI();
+builder.Services.AddServerSideBlazor().AddMicrosoftIdentityConsentHandler();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -37,14 +36,21 @@ builder.Services.AddServerSideBlazor()
 
 //var storageConnection = builder.Configuration["ConnectionStrings:Storage:DotAzure"];
 
-var storageUri = builder.Configuration["Storage:Endpoint"];
+var blobStorageUri = builder.Configuration["Storage:Endpoint"];
+var queueStorageUri = builder.Configuration["Storage:QueueEndpoint"];
 
 builder.Services.AddAzureClients(azureBuilder =>
 {
-    azureBuilder.AddBlobServiceClient(new Uri(storageUri));
-
     var credentials = new DefaultAzureCredential();
+    
+    azureBuilder.AddBlobServiceClient(new Uri(blobStorageUri));
 
+    var s = azureBuilder.AddQueueServiceClient(new Uri(queueStorageUri)).ConfigureOptions(options =>
+    {
+        options.MessageEncoding = QueueMessageEncoding.Base64;
+    });
+    
+    
     azureBuilder.UseCredential(credentials);
 });
 

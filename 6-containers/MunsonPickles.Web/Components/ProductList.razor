@@ -1,5 +1,6 @@
 ﻿
 @inject ProductService productService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @if (Products == null)
 {
@@ -31,6 +32,11 @@ else
     protected override async Task OnInitializedAsync()
     {
         Products = (await productService.GetAllProducts()).AsQueryable();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        
+        
     }
 
     void LeaveReview(Product product)
