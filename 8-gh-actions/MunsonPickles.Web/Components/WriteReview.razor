@@ -1,0 +1,135 @@
+﻿@using Azure.Storage.Blobs
+@using Azure.Storage.Blobs.Models
+@using Azure.Storage.Queues
+@using System.Diagnostics.CodeAnalysis;
+@using System.Security.Claims;
+
+@inject IJSRuntime JS
+@inject ReviewService reviewService
+@inject BlobServiceClient blobService
+@inject QueueServiceClient queueService
+@inject IConfiguration configuration
+@inject AuthenticationStateProvider authenticationStateProvider
+
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitleLabel">What did you think about @Product?.Name?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-lable="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" rows="10"
+                          placeholder="Leave us a review, we'll ❤️ it and we'll ❤️ you!"
+                          @bind="reviewText" />
+                @if (showUpload)
+                {
+                    <InputFile id="hi" OnChange="@LoadFiles" />
+                }
+                @if (uploadSuccessful)
+                {
+                    <p class="bg-success">Uploaded</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" @onclick="@SaveReview">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public Product Product { get; set; }
+
+    string reviewText = string.Empty;
+    string newBlobName = string.Empty;
+    string loggedInUser = "matt"; // the name matt will eventually be replaced by the logged in user
+    string containerName = "reviewimages";
+    bool loadedPhoto = false;
+
+    bool showUpload = true;
+    bool uploadSuccessful = false;
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+            if (!authState.User.Identity.IsAuthenticated)
+                return;
+
+            loggedInUser = authState.User.Identity.Name!;
+
+            string userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            uploadSuccessful = false;
+
+            // immediately save to blob storage
+            var containerClient = blobService.GetBlobContainerClient(containerName);
+
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+            // just assuming everything is a jpg :)
+            var imageName = $"{Guid.NewGuid().ToString()}.jpg";
+
+            newBlobName = $"{loggedInUser.Replace(" ", "").ToLower()}/{imageName}";
+
+            await containerClient.UploadBlobAsync(
+                newBlobName, e.File.OpenReadStream(maxAllowedSize: 2048000)
+            );
+
+            // create a new message for the queue
+            var queueClient = queueService.GetQueueClient("review-images");
+            
+            await queueClient.CreateIfNotExistsAsync();
+            await queueClient.SendMessageAsync($"{userId} {imageName}");
+
+            loadedPhoto = true;
+
+            // this is a way for me to know the upload worked
+            uploadSuccessful = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            uploadSuccessful = false;
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    async Task SaveReview()
+    {
+        var cdn = configuration["Cdn:Endpoint"];
+        List<string>? photoUrls = new();
+
+        if (loadedPhoto)
+        {
+            photoUrls.Add($"{cdn}/{containerName}/{newBlobName}");
+        }
+
+        await reviewService.AddReview(reviewText, photoUrls, Product.Id);
+
+        // we'll just assume everything worked out great and close the modal
+
+        reviewText = string.Empty;
+        newBlobName = string.Empty;
+        loadedPhoto = false;
+        showUpload = false;
+        uploadSuccessful = false;
+
+        // hacky work around to get the upload to clear file name
+        StateHasChanged();
+        showUpload = true;
+        StateHasChanged();
+
+        await JS.InvokeVoidAsync("hideModal", "reviewModal");
+    }
+}

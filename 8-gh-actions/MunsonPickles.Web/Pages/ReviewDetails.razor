@@ -1,0 +1,36 @@
+﻿@page "/reviewdetails/{reviewId:int}"
+
+@inject ReviewService reviewService
+
+@if(review is null)
+{
+    <p>Waiting for some reviews...</p>
+}
+else
+{
+    <h1 class="display-3">@review?.Product?.Name Review</h1>
+
+    <div>@review?.Text</div>
+
+    @if (review?.Photos is not null)
+    {
+        @foreach (var item in review.Photos)
+        {
+            <div class="bg-light">
+                <img src="@item.PhotoUrl" class="m-4" style="height:100px;" />
+            </div>
+        }          
+    }
+}
+@code {
+    [Parameter]
+    public int ReviewId{ get; set; }
+
+    Review? review;
+
+    protected async override Task OnInitializedAsync()
+    {
+        review = await reviewService.GetReviewById(ReviewId);
+    }
+
+}
