@@ -16,6 +16,11 @@ else
                 <p class="lead">@product?.Description</p>
             </div>
         </div>
+
+        <div class="col">
+            <img src="@product?.PhotoUrl" style="height:200px"/>
+        </div>
+
         <div class="row mt-lg-4 bg-light">
             <div class="column">
                 <ProductReviews Product="@product"/>

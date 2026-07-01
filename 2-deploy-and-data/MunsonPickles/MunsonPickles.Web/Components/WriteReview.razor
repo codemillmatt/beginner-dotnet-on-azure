@@ -1,6 +1,9 @@
-﻿
+﻿@using Azure.Storage.Blobs
+@using Azure.Storage.Blobs.Models
+
 @inject IJSRuntime JS
 @inject ReviewService reviewService
+@inject BlobServiceClient blobService
 
 <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -15,6 +18,14 @@
                 <textarea class="form-control" rows="10" 
                     placeholder="Leave us a review, we'll ❤️ it and we'll ❤️ you!"
                     @bind="reviewText"/>
+                    @if (showUpload)
+                    {
+                        <InputFile id="hi" OnChange="@LoadFiles"/>
+                    }
+                    @if (uploadSuccessful)
+                    {
+                        <p class="bg-success">Uploaded</p>
+                    }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
@@ -30,6 +41,27 @@
     public Product Product { get; set; } = new();
 
     string reviewText = string.Empty;
+    string newBlobName = string.Empty;
+    string loggedInUser = "matt";
+    bool loadedPhoto = false;
+
+    bool showUpload = true;
+    bool uploadSuccessful = false;
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        uploadSuccessful = false;
+
+        var containerClient = blobService.GetBlobContainerClient(loggedInUser);
+        await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+        newBlobName = $"{Guid.NewGuid().ToString()}.jpg";
+        await containerClient.UploadBlobAsync(newBlobName, e.File.OpenReadStream(maxAllowedSize: 204800));
+
+        loadedPhoto = true;
+        uploadSuccessful = true;
+        StateHasChanged();
+    }
 
     async Task SaveReview()
     {

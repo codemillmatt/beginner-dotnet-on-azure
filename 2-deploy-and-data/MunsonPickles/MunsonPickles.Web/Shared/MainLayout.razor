@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthProvider
 
 <PageTitle>Munson Pickles and Preserves</PageTitle>
 
@@ -9,6 +10,10 @@
 
     <main>
         <div class="top-row px-4">
+            @if (userName is not null)
+            {
+                <span>Привет, @userName!</span>
+            }
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About (data)</a>
         </div>
 
@@ -17,3 +22,19 @@
         </article>
     </main>
 </div>
+
+@code {
+    private string? userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Пробуем получить имя из разных источников
+        userName = user.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value
+                   ?? user.Claims.FirstOrDefault(c => c.Type == "name")?.Value
+                   ?? user.Identity?.Name
+                   ?? "Гость";
+    }
+}
